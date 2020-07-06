@@ -28,7 +28,7 @@ twitter_username: n3r0x42
 github_username:  n3r0x
 
 # Build settings
-theme: jekyll-theme-cayman
+theme: minima
 plugins:
   - jekyll-feed
 
