@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-09T01:22:45+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">n3r0x’s blog</title><subtitle>Yes we poutre des loutres</subtitle><entry><title type="html">Lab Active Directory - Part 6 - Active Directory</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 6 - Active Directory" /><published>2020-07-09T01:03:14+02:00</published><updated>2020-07-09T01:03:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin.html&quot;&gt;vSwitch ESXi (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense.html&quot;&gt;PFSense&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin.html&quot;&gt;Client Windows 10 (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html&quot;&gt;vSwitch ESXi (SW-SRV)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html&quot;&gt;Active Directory&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;vSwitch ESXi (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;Client Windows 10 (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;WSUS&lt;/li&gt;
+  &lt;li&gt;Serveur de fichiers&lt;/li&gt;
+  &lt;li&gt;Microsoft ATA&lt;/li&gt;
+  &lt;li&gt;PKI d’entreprise&lt;/li&gt;
+  &lt;li&gt;Network Policy Server&lt;/li&gt;
+  &lt;li&gt;Exchange&lt;/li&gt;
+  &lt;li&gt;Serveur de logs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Dans ce chapitre, nous allons configurer le &lt;strong&gt;contrôleur de domaine&lt;/strong&gt; du lab. C’est donc cette machine qui embarquera &lt;strong&gt;Active Directory&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pour commencer, nous allons sur &lt;strong&gt;Machines virtuelles&lt;/strong&gt;, puis &lt;strong&gt;Créer/Enregistrer une machine virtuelle&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/creer-dc-1.png&quot; alt=&quot;creer-dc1&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On prépare une machine pour &lt;strong&gt;Microsoft Windows Server 2016 ou version ultérieure (64 bits)&lt;/strong&gt; qu’on va nommer &lt;strong&gt;Win2019-DC-01&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/creer-dc-2.png&quot; alt=&quot;creer-dc2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Pour le stockage, on laisse les options de base:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/creer-dc-3.png&quot; alt=&quot;creer-dc3&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On configure le hardware de notre machine virtuelle:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;CPU&lt;/strong&gt;: 2&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Disque&lt;/strong&gt;: 150Go&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;RAM&lt;/strong&gt;: 4096Mo&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Adaptateur réseau&lt;/strong&gt;: SW-SRV&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Lecteur de CD/DVD 1&lt;/strong&gt;: Notre ISO Windows Server 2019 64 bits&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/creer-dc-4.png&quot; alt=&quot;creer-dc4&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Pour éviter le problème au démarrage sur EFI, il faut aller dans &lt;strong&gt;Options VM&lt;/strong&gt;, puis dans &lt;strong&gt;Options de démarrage&lt;/strong&gt; et sélectionner &lt;strong&gt;Microprogramme: BIOS&lt;/strong&gt; à la place de &lt;strong&gt;EFI&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/creer-dc-5.png&quot; alt=&quot;creer-dc5&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On peut maintenant installer Windows Server 2019 de façon classique.&lt;/p&gt;</content><author><name></name></author><summary type="html">Sommaire</summary></entry><entry><title type="html">Lab Active Directory - Part 5 - vSwitch ESXi (SW-SRV)</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 5 - vSwitch ESXi (SW-SRV)" /><published>2020-07-08T22:44:14+02:00</published><updated>2020-07-08T22:44:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin.html&quot;&gt;vSwitch ESXi (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense.html&quot;&gt;PFSense&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin.html&quot;&gt;Client Windows 10 (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html&quot;&gt;vSwitch ESXi (SW-SRV)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html&quot;&gt;Active Directory&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;vSwitch ESXi (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;Client Windows 10 (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;WSUS&lt;/li&gt;
+  &lt;li&gt;Serveur de fichiers&lt;/li&gt;
+  &lt;li&gt;Microsoft ATA&lt;/li&gt;
+  &lt;li&gt;PKI d’entreprise&lt;/li&gt;
+  &lt;li&gt;Network Policy Server&lt;/li&gt;
+  &lt;li&gt;Exchange&lt;/li&gt;
+  &lt;li&gt;Serveur de logs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Nous allons créer le switch dédié aux serveurs de l’entreprise (&lt;strong&gt;SW-SRV&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;p&gt;On va rester simple pour le moment, et se contenter d’un réseau à plat sur cette zone (Pas de VLAN)&lt;/p&gt;
+
+&lt;h2 id=&quot;création-dun-nouveau-vswitch&quot;&gt;Création d’un nouveau vSwitch&lt;/h2&gt;
+
+&lt;p&gt;Sur l’interface d’administration de ESXi, cliquer sur &lt;strong&gt;mise en réseau&lt;/strong&gt; puis &lt;strong&gt;Commutateurs virtuels&lt;/strong&gt; et enfin &lt;strong&gt;Ajouter un commutateur virtuel standard&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/mise-en-reseay-1.png&quot; alt=&quot;creer-vswitch&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Je laisse les options par défaut, et je nomme ce vSwitch &lt;strong&gt;SW-SRV&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/ajouter-new-vswitch-srv.png&quot; alt=&quot;creer-vswitch2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On retourne sur &lt;strong&gt;Mise en réseau&lt;/strong&gt;, puis &lt;strong&gt;Groupes de ports&lt;/strong&gt; et enfin &lt;strong&gt;Ajouter un groupe de ports&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/creation-groupe-de-ports-1.png&quot; alt=&quot;creer-groupe-ports1&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On configure le groupe de ports afin qu’il prenne place sur le vSwitch &lt;strong&gt;SW-SRV&lt;/strong&gt;, on lui donne un nom (Par exemple: &lt;strong&gt;SW-SRV&lt;/strong&gt; afin de rapidement identifier son rôle) et on laisse le numéro de &lt;strong&gt;VLAN 0&lt;/strong&gt; par défaut:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/creation-groupe-de-ports-2.png&quot; alt=&quot;creer-groupe-ports2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Si l’on retourne sur &lt;strong&gt;Mise en réseau&lt;/strong&gt;, puis &lt;strong&gt;SW-SRV&lt;/strong&gt;, on doit avoir cette configuration réseau:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/creation-groupe-de-ports-4.png&quot; alt=&quot;creer-groupe-ports4&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;configuration-de-pfsense&quot;&gt;Configuration de PFSense&lt;/h2&gt;
+
+&lt;p&gt;Depuis ESXi, on coupe PFSense puis nous ajoutons une carte réseau supplémentaire pour y connecter le switch &lt;strong&gt;SW-SRV&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/ajouter-carte-reseau.png&quot; alt=&quot;ajouter-carte-reseau&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On peut ensuite redémarrer le routeur et utiliser le Windows 10 présent dans le LAN d’administration, pour se connecter sur l’interface web du routeur et configurer cette nouvelle interface:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/interface-assignment.png&quot; alt=&quot;interface-assignment&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On clic sur &lt;strong&gt;OPT1&lt;/strong&gt; afin de modifier la configuration de cette nouvelle interface:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Enable&lt;/strong&gt;: Clic&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;IPv4 Configuration Type&lt;/strong&gt;: Static IPv4&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;IPv4 Address&lt;/strong&gt;: 10.0.2.1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/config-opt1.png&quot; alt=&quot;config-opt1&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On valide, puis on recharge la configuration en cliquant sur &lt;strong&gt;Apply Changes&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;On va également en profiter pour renommer l’interface &lt;strong&gt;LAN&lt;/strong&gt; en &lt;strong&gt;ADM&lt;/strong&gt; pour coller avec la réalité.
+Pour ça, on clique sur &lt;strong&gt;Interfaces&lt;/strong&gt;, puis &lt;strong&gt;LAN&lt;/strong&gt; et on change la valeur du champ &lt;strong&gt;Description&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/change-nom-lan.png&quot; alt=&quot;change-nom-lan&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On valide, on recharge, et on se retrouve avec les interfaces suivantes:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-server/liste-interfaces.png&quot; alt=&quot;liste-interfaces&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Nous allons maintenant pouvoir installer le contrôleur de domaine du laboratoire.&lt;/p&gt;</content><author><name></name></author><summary type="html">Sommaire</summary></entry><entry><title type="html">Lab Active Directory - Part 4 - Client Windows 10 (SW-ADM)</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 4 - Client Windows 10 (SW-ADM)" /><published>2020-07-06T21:54:14+02:00</published><updated>2020-07-06T21:54:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin.html&quot;&gt;vSwitch ESXi (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense.html&quot;&gt;PFSense&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin.html&quot;&gt;Client Windows 10 (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html&quot;&gt;vSwitch ESXi (SW-SRV)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html&quot;&gt;Active Directory&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;vSwitch ESXi (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;Client Windows 10 (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;WSUS&lt;/li&gt;
+  &lt;li&gt;Serveur de fichiers&lt;/li&gt;
+  &lt;li&gt;Microsoft ATA&lt;/li&gt;
+  &lt;li&gt;PKI d’entreprise&lt;/li&gt;
+  &lt;li&gt;Network Policy Server&lt;/li&gt;
+  &lt;li&gt;Exchange&lt;/li&gt;
+  &lt;li&gt;Serveur de logs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Dans ce chapitre, nous allons configurer une machine Windows 10 qui appartiendra à un administrateur de l’entreprise, et à partir de laquelle nous allons pouvoir configurer les réseaux et serveurs du lab.&lt;/p&gt;
+
+&lt;p&gt;Pour commencer, nous allons sur &lt;strong&gt;Machines virtuelles&lt;/strong&gt;, puis &lt;strong&gt;Créer/Enregistrer une machine virtuelle&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-1.png&quot; alt=&quot;creer-win10-adm1&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On prépare une machine pour &lt;strong&gt;Microsoft Windows 10 (64 bits)&lt;/strong&gt; qu’on va nommer &lt;strong&gt;Win10-admin-network-system&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-2.png&quot; alt=&quot;creer-win10-adm2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Pour le stockage, on laisse les options de base:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-3.png&quot; alt=&quot;creer-win10-adm3&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On configure le hardware de notre machine virtuelle:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;CPU&lt;/strong&gt;: 2&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Disque&lt;/strong&gt;: 32Go&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;RAM&lt;/strong&gt;: 2048Mo&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Adaptateur réseau&lt;/strong&gt;: VLAN-ADM-SRV-AND-NETWORK&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Lecteur de CD/DVD 1&lt;/strong&gt;: Notre ISO Windows 10&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-4.png&quot; alt=&quot;creer-win10-adm4&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Afin d’éviter un bug lors du boot de la VM, on va dans &lt;strong&gt;Options VM&lt;/strong&gt; et dans &lt;strong&gt;Options de démarrage&lt;/strong&gt; / &lt;strong&gt;Microprogramme&lt;/strong&gt; on sélectionne &lt;strong&gt;BIOS&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-5.png&quot; alt=&quot;creer-win10-adm5&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On va également créer un compte &lt;strong&gt;admin_local&lt;/strong&gt; sur le poste:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-6.png&quot; alt=&quot;creer-win10-adm6&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Une fois terminé, on peut configurer le réseau avec les paramètres suivants:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;IP&lt;/strong&gt;: 10.0.1.2&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Masque&lt;/strong&gt;: 24&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Gateway&lt;/strong&gt;: 10.0.1.1&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;DNS&lt;/strong&gt;: 10.0.1.1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-7.png&quot; alt=&quot;creer-win10-adm7&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Une fois configuré, on peut accéder à l’interface d’administration de &lt;strong&gt;PFSense&lt;/strong&gt; via &lt;a href=&quot;https://10.0.1.1&quot;&gt;https://10.0.1.1&lt;/a&gt; avec le login &lt;strong&gt;admin&lt;/strong&gt; et le mot de passe &lt;strong&gt;pfsense&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-8.png&quot; alt=&quot;creer-win10-adm8&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On laisse l’interface &lt;strong&gt;WAN&lt;/strong&gt; en &lt;strong&gt;DHCP&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-9.png&quot; alt=&quot;creer-win10-adm9&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Le reste de la configuration est classique. On change le mot de passe, et on reload la configuration du routeur.&lt;/p&gt;
+
+&lt;p&gt;Une fois terminé, on peut vérifier qu’on a bien accès à Internet depuis la machine Windows 10 de l’administrateur:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-10.png&quot; alt=&quot;creer-win10-adm10&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Au niveau de notre vSwitch &lt;strong&gt;SW-ADM&lt;/strong&gt; nous avons désormais cette configuration:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-11.png&quot; alt=&quot;creer-win10-adm11&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Selon le schéma disponible dans &lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;, voici où on en est actuellement:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-win10-admin/create-win-10-admin-12.png&quot; alt=&quot;creer-win10-adm12&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On va maintenant pouvoir s’attaquer au &lt;strong&gt;contrôleur de domaine&lt;/strong&gt;, mais avant ça, configurons le vSwitch &lt;strong&gt;SW-SRV&lt;/strong&gt; qui connectera nos serveurs à notre routeur.&lt;/p&gt;</content><author><name></name></author><summary type="html">Sommaire</summary></entry><entry><title type="html">Lab Active Directory - Part 3 - PFSense</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 3 - PFSense" /><published>2020-07-06T21:52:14+02:00</published><updated>2020-07-06T21:52:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin.html&quot;&gt;vSwitch ESXi (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense.html&quot;&gt;PFSense&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin.html&quot;&gt;Client Windows 10 (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html&quot;&gt;vSwitch ESXi (SW-SRV)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html&quot;&gt;Active Directory&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;vSwitch ESXi (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;Client Windows 10 (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;WSUS&lt;/li&gt;
+  &lt;li&gt;Serveur de fichiers&lt;/li&gt;
+  &lt;li&gt;Microsoft ATA&lt;/li&gt;
+  &lt;li&gt;PKI d’entreprise&lt;/li&gt;
+  &lt;li&gt;Network Policy Server&lt;/li&gt;
+  &lt;li&gt;Exchange&lt;/li&gt;
+  &lt;li&gt;Serveur de logs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Dans ce chapitre, nous allons configurer &lt;strong&gt;PFSense&lt;/strong&gt;. Celui-ci servira de routeur principal pour l’ensemble du réseau. C’est sur celui-ci que viendront se connecter les différents sous-réseaux (clients, admins, serveurs).
+Nous allons dans un premier temps configurer deux pattes sur celui-ci:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;WAN&lt;/strong&gt; (Qui sera reliée à notre interface physique afin de fournir Internet aux VMs)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;LAN_ADM&lt;/strong&gt; (Qui sera notre sous-réseau dédié aux administrateurs, sur le vSwitch du chapitre précédent).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Nous configurerons les pattes suivantes (&lt;strong&gt;LAN_CLI&lt;/strong&gt; et &lt;strong&gt;LAN_SRV&lt;/strong&gt;) quand elles seront nécessaires.&lt;/p&gt;
+
+&lt;p&gt;Seule la patte &lt;strong&gt;LAN_ADM&lt;/strong&gt; pourra se connecter sur l’interface d’administration du routeur.&lt;/p&gt;
+
+&lt;h2 id=&quot;création-de-la-machine-virtuelle-pfsense&quot;&gt;Création de la machine virtuelle PFSense&lt;/h2&gt;
+
+&lt;p&gt;Conectez-vous en tant qu’administrateur ESXi, puis cliquez sur &lt;strong&gt;Machines virtuelles&lt;/strong&gt;, puis &lt;strong&gt;Créer/Enregistrer une machine virtuelle&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-pfsense-part3/create-vm-pfsense-1.png&quot; alt=&quot;creation-pfsense-1&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Donnez lui un nom, et choississez &lt;strong&gt;FreeBSD 12 ou version ultérieures (64 bits)&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-pfsense-part3/create-vm-pfsense-2.png&quot; alt=&quot;creation-pfsense-2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vous pouvez configurer une machine virtuelle avec peu de ressources. Sélectionnez l’ISO d’installation de PFSense, cliquez ensuite sur &lt;strong&gt;Ajouter un adapteur réseau&lt;/strong&gt; puis configurez les deux adaptateurs de cette façon:
+&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-pfsense-part3/create-vm-pfsense-3.png&quot; alt=&quot;creation-pfsense-3&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Vous pouvez maintenenant terminer la configuration de cette nouvelle machine, et la lancer afin d’installer PFSense.&lt;/p&gt;
+
+&lt;p&gt;Une fois prêt, nous pouvons configurer les interfaces disponibles sur le routeur:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Should VLANs be set up now&lt;/strong&gt;: n&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Enter the WAN interface name&lt;/strong&gt;: vmx0&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Enter the LAN interface name&lt;/strong&gt;: vmx1&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Do you want to proceed ?&lt;/strong&gt;: y&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;On entre &lt;strong&gt;2&lt;/strong&gt; afin d’assigner une IP sur l’interface &lt;strong&gt;vmx1&lt;/strong&gt; (Le LAN d’administration):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-pfsense-part3/create-vm-pfsense-4.png&quot; alt=&quot;creation-pfsense-4&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On sélectionne notre interface &lt;strong&gt;vmx1&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-pfsense-part3/create-vm-pfsense-5.png&quot; alt=&quot;creation-pfsense-5&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;L’IP de cette interface: &lt;strong&gt;10.0.1.1&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Masque: &lt;strong&gt;24&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Activer le DHCP ? &lt;strong&gt;n&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Revenir au protocole HTTP ? &lt;strong&gt;n&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-pfsense-part3/create-vm-pfsense-6.png&quot; alt=&quot;creation-pfsense-6&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Notre configuration est prête, nous allons maintenant installer le poste d’un administrateur afin de prendre la main sur l’interface web d’administration du PFSense.&lt;/p&gt;</content><author><name></name></author><summary type="html">Sommaire</summary></entry><entry><title type="html">Lab Active Directory - Part 2 - vSwitch ESXi (SW-ADM)</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 2 - vSwitch ESXi (SW-ADM)" /><published>2020-07-06T21:44:14+02:00</published><updated>2020-07-06T21:44:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin.html&quot;&gt;vSwitch ESXi (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense.html&quot;&gt;PFSense&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin.html&quot;&gt;Client Windows 10 (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html&quot;&gt;vSwitch ESXi (SW-SRV)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html&quot;&gt;Active Directory&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;vSwitch ESXi (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;Client Windows 10 (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;WSUS&lt;/li&gt;
+  &lt;li&gt;Serveur de fichiers&lt;/li&gt;
+  &lt;li&gt;Microsoft ATA&lt;/li&gt;
+  &lt;li&gt;PKI d’entreprise&lt;/li&gt;
+  &lt;li&gt;Network Policy Server&lt;/li&gt;
+  &lt;li&gt;Exchange&lt;/li&gt;
+  &lt;li&gt;Serveur de logs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Dans cette première partie, nous allons créer le switch dédié aux administrateurs de l’entreprise (SW-ADM). Il servira à complètement isoler ce réseau critique du réseau des utilisateurs classiques.&lt;/p&gt;
+
+&lt;p&gt;Le réseau d’administration sera également découpé en &lt;strong&gt;deux VLAN&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Le &lt;strong&gt;premier&lt;/strong&gt; servira à l’&lt;strong&gt;administration des serveurs et routeurs&lt;/strong&gt; de l’entreprise.&lt;/li&gt;
+  &lt;li&gt;Le &lt;strong&gt;second&lt;/strong&gt; servira pour l’&lt;strong&gt;administration des postes clients&lt;/strong&gt; de l’entreprise.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;L’idéal serait d’également créer un VLAN dédié à l’administration des équipements réseaux de l’entreprise. Mais dans le cadre de ce lab, nous nous contenterons de deux VLAN d’administration distincts.&lt;/p&gt;
+
+&lt;p&gt;L’objectif de ce découpage est de limiter le nombre de privilèges que peut récupérer un attaquant si il arrive à compromettre la machine d’un administrateur. Si le poste de l’administrateur des postes de travail est compromis, l’attaquant ne pourra pas s’en servir pour rebondir sur les serveurs ou les équipements réseaux.&lt;/p&gt;
+
+&lt;p&gt;En ce qui concerne les règles de filtrage, elles ressembleront à quelque chose comme:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Admin postes utilisateurs&lt;/strong&gt;: Possède l’autorisation de se connecter aux postes clients via RDP pour de l’administration/debug.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Admin serveurs&lt;/strong&gt;: Possède l’autorisation d’accéder aux ports RDP, SSH, HTTPS, etc des serveurs pour l’administration/debug.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Admin réseaux&lt;/strong&gt;: Possède l’autorisation d’accéder aux ports SSH et HTTPS des switchs et routeurs pour l’administration/debug.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;création-dun-nouveau-vswitch&quot;&gt;Création d’un nouveau vSwitch&lt;/h2&gt;
+
+&lt;p&gt;Sur l’interface d’administration de ESXi, cliquer sur &lt;strong&gt;mise en réseau&lt;/strong&gt; puis &lt;strong&gt;Commutateurs virtuels&lt;/strong&gt; et enfin &lt;strong&gt;Ajouter un commutateur virtuel standard&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-admin/mise-en-reseay-1.png&quot; alt=&quot;creer-vswitch&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Je laisse les options par défaut, et je nomme ce vSwitch &lt;strong&gt;SW-ADM&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-admin/ajouter-new-vswitch-adm.png&quot; alt=&quot;creer-vswitch2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On va maintenant pouvoir créer deux groupes de ports sur ce vSwitch afin d’y placer nos deux VLAN dédiés à l’administration.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Le &lt;strong&gt;VLAN 10&lt;/strong&gt; servira à l’&lt;strong&gt;administration des serveurs et du réseau&lt;/strong&gt;.&lt;/li&gt;
+  &lt;li&gt;Le &lt;strong&gt;VLAN 20&lt;/strong&gt; servira à l’&lt;strong&gt;administration des postes clients&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;On retourne sur &lt;strong&gt;Mise en réseau&lt;/strong&gt;, puis &lt;strong&gt;Groupes de ports&lt;/strong&gt; et enfin &lt;strong&gt;Ajouter un groupe de ports&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-admin/creation-groupe-de-ports-1.png&quot; alt=&quot;creer-groupe-ports1&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On configure le groupe de ports afin qu’il prenne place sur le vSwitch &lt;strong&gt;SW-ADM&lt;/strong&gt;, on lui donne un nom (Par exemple: &lt;strong&gt;VLAN-ADM-SRV-AND-NETWORK&lt;/strong&gt; afin de rapidement identifier son rôle) et on renseigne le numéro de &lt;strong&gt;VLAN 10&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-admin/creation-groupe-de-ports-2.png&quot; alt=&quot;creer-groupe-ports2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On fait la même chose pour le VLAN d’administration dédié aux postes de clients:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-admin/creation-groupe-de-ports-3.png&quot; alt=&quot;creer-groupe-ports3&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Si l’on retourne sur &lt;strong&gt;Mise en réseau&lt;/strong&gt;, puis &lt;strong&gt;SW-ADM&lt;/strong&gt;, on doit avoir cette configuration réseau:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-vswitch-admin/creation-groupe-de-ports-4.png&quot; alt=&quot;creer-groupe-ports4&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;C’est tout pour le moment, nous allons maintenant pouvoir installer une machine Windows 10 qui servira de machine d’administration pour configurer PFSense.&lt;/p&gt;</content><author><name></name></author><summary type="html">Sommaire</summary></entry><entry><title type="html">Lab Active Directory - Part 1 - Introduction</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 1 - Introduction" /><published>2020-07-06T21:40:14+02:00</published><updated>2020-07-06T21:40:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-vswitch-admin.html&quot;&gt;vSwitch ESXi (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-config-pfsense.html&quot;&gt;PFSense&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-win10-admin.html&quot;&gt;Client Windows 10 (SW-ADM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html&quot;&gt;vSwitch ESXi (SW-SRV)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html&quot;&gt;Active Directory&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;vSwitch ESXi (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;Client Windows 10 (SW-CLI)&lt;/li&gt;
+  &lt;li&gt;WSUS&lt;/li&gt;
+  &lt;li&gt;Serveur de fichiers&lt;/li&gt;
+  &lt;li&gt;Microsoft ATA&lt;/li&gt;
+  &lt;li&gt;PKI d’entreprise&lt;/li&gt;
+  &lt;li&gt;Network Policy Server&lt;/li&gt;
+  &lt;li&gt;Exchange&lt;/li&gt;
+  &lt;li&gt;Serveur de logs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Nous simulerons le SI de la société &lt;strong&gt;RED&lt;/strong&gt; qui souhaite déployer un réseau d’entreprise sécurisé basé sur Active Directory, et prévu pour facilement  s’agrandir afin de suivre les évolutions de l’entreprise.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;L’objectif de cette série d’articles est d’étudier la mise en place d’un laboratoire basé sur VMWare ESXi, qui simulera un environnement Microsoft Active Directory d’entreprise avec ses clients, serveurs, utilisateurs et équipements réseaux. Il sera dès lors possible de s’en servir pour monter en compétence sur l’administration d’un SI basé sur Active Directory, mais également de travailler sur les différentes méthodes de compromission de ce type d’environnement.&lt;/p&gt;
+
+&lt;p&gt;L’installation de VMWare ESXi ne sera pas couverte par cette série d’articles, cependant, la configuration de celui-ci le sera (Configuration des vSwitch par exemple).&lt;/p&gt;
+
+&lt;p&gt;Le résultat final &lt;strong&gt;devrait&lt;/strong&gt; ressembler à quelque chose comme:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-introduction/schema_reseau.png&quot; alt=&quot;schema-reseau&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Serveur 1 - RAM: 8Go - AD / PKI / Filer / NPS / WSUS / SCCM&lt;/p&gt;
+
+  &lt;p&gt;Serveur 2 - RAM: 4Go - ATA / Exchange&lt;/p&gt;
+
+  &lt;p&gt;Serveur 3 - RAM: 4Go - Serveur de logs (Syslog / ELK / Splunk / Graylog)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;infrastructure-et-services&quot;&gt;Infrastructure et services&lt;/h2&gt;
+
+&lt;p&gt;Le laboratoire sera hebergé sur un serveur ESXi avec 1To de stockage et 32Go de RAM. Il se composera des services suivants:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Microsoft Active Directory&lt;/li&gt;
+  &lt;li&gt;Network Policy Server (Contrôle d’accès)&lt;/li&gt;
+  &lt;li&gt;Active Directory Certificate Services (PKI)&lt;/li&gt;
+  &lt;li&gt;Microsoft Advanced Threats Analytics (Analyse des events sécurité d’Active Directory)&lt;/li&gt;
+  &lt;li&gt;SMB (Serveur de fichiers)&lt;/li&gt;
+  &lt;li&gt;Exchange (Serveur de mail)&lt;/li&gt;
+  &lt;li&gt;Windows Server Update Services (Serveur de mise à jour)&lt;/li&gt;
+  &lt;li&gt;Syslog&lt;/li&gt;
+  &lt;li&gt;Elasticsearch / Logstash / Kibana&lt;/li&gt;
+  &lt;li&gt;Grafana&lt;/li&gt;
+  &lt;li&gt;Splunk&lt;/li&gt;
+  &lt;li&gt;PFSense&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><summary type="html">Sommaire</summary></entry></feed>
