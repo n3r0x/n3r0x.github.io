@@ -65,7 +65,8 @@ On peut ensuite redémarrer le routeur et utiliser le Windows 10 présent dans l
 
 On clic sur **OPT1** afin de modifier la configuration de cette nouvelle interface:
 
-- **Enable**: Clic
+- **Enable**: Check
+- **Description**: SRV
 - **IPv4 Configuration Type**: Static IPv4
 - **IPv4 Address**: 10.0.2.1
 

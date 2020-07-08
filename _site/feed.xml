@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-09T01:22:45+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">n3r0x’s blog</title><subtitle>Yes we poutre des loutres</subtitle><entry><title type="html">Lab Active Directory - Part 6 - Active Directory</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 6 - Active Directory" /><published>2020-07-09T01:03:14+02:00</published><updated>2020-07-09T01:03:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-09T01:55:10+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">n3r0x’s blog</title><subtitle>Yes we poutre des loutres</subtitle><entry><title type="html">Lab Active Directory - Part 6 - Active Directory</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 6 - Active Directory" /><published>2020-07-09T01:03:14+02:00</published><updated>2020-07-09T01:03:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
 
 &lt;ol&gt;
   &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
@@ -111,7 +111,8 @@
 &lt;p&gt;On clic sur &lt;strong&gt;OPT1&lt;/strong&gt; afin de modifier la configuration de cette nouvelle interface:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Enable&lt;/strong&gt;: Clic&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Enable&lt;/strong&gt;: Check&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Description&lt;/strong&gt;: SRV&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;IPv4 Configuration Type&lt;/strong&gt;: Static IPv4&lt;/li&gt;
   &lt;li&gt;&lt;strong&gt;IPv4 Address&lt;/strong&gt;: 10.0.2.1&lt;/li&gt;
 &lt;/ul&gt;
