@@ -84,3 +84,5 @@ On valide, on recharge, et on se retrouve avec les interfaces suivantes:
 ![liste-interfaces]({{ site.url }}/assets/lab-entreprise-vswitch-server/liste-interfaces.png){:style="border: 1px solid #1756a9;"}
 
 Nous allons maintenant pouvoir installer le contrôleur de domaine du laboratoire.
+
+

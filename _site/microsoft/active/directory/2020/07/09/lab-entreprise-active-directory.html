@@ -99,6 +99,64 @@
 
 <p>On peut maintenant installer Windows Server 2019 de façon classique.</p>
 
+<h2 id="configuration-de-windows-server-2019">Configuration de Windows Server 2019</h2>
+
+<h3 id="nom-de-la-machine">Nom de la machine</h3>
+
+<p>Pour commencer, nous allons changer le nom du serveur, puis lui configurer une adresse IP fixe:</p>
+
+<p>Ouvrez <strong>Paramètres Windows</strong>, puis <strong>Système</strong>, <strong>Informations système</strong>:</p>
+
+<p><img src="http://localhost:4000/assets/lab-entreprise-active-directory/conf-dc-rename.png" alt="creer-dc-rename" style="border: 1px solid #1756a9;" /></p>
+
+<p>Cliquez sur <strong>Renommer ce PC</strong> et entrez <strong>DC01</strong>:</p>
+
+<p><img src="http://localhost:4000/assets/lab-entreprise-active-directory/conf-dc-rename2.png" alt="creer-dc-rename2" style="border: 1px solid #1756a9;" /></p>
+
+<p>Cliquez sur <strong>Suivant</strong>, puis <strong>Redémarrer plus tard</strong>.</p>
+
+<p>Nous allons maintenant configurer une IP fixe pour le contrôleur de domaine.</p>
+
+<h3 id="configuration-réseau">Configuration réseau</h3>
+
+<p>On se rend sur <strong>Paramètres Ethernet</strong> afin de configurer notre interface:</p>
+
+<p><img src="http://localhost:4000/assets/lab-entreprise-active-directory/conf-ip1.png" alt="conf-ip1" style="border: 1px solid #1756a9;" /></p>
+
+<p>Notre contrôleur de domaine possedera l’IP <strong>10.0.2.2</strong>. Sa <strong>gateway</strong> et son <strong>dns</strong> seront tous les deux <strong>10.0.2.1</strong>:</p>
+
+<p><img src="http://localhost:4000/assets/lab-entreprise-active-directory/conf-ip2.png" alt="conf-ip2" style="border: 1px solid #1756a9;" /></p>
+
+<p>On redémarre pour prendre en compte le changement de nom de machine.</p>
+
+<p>Inutile d’essayer de ping le contrôleur de domaine depuis le poste Windows 10. Le firewall du serveur bloque l’ICMP. Vous pouvez désactiver le firewall sur la zone <strong>privée</strong> pour avoir une réponse. Ca peut-être utile pour du debug.</p>
+
+<h3 id="configuration-pfsense">Configuration PFSense</h3>
+
+<p>Nous allons devoir configurer le firewall de PFSense afin qu’il laisse passer le trafic venant de l’interface <strong>SRV</strong>.
+Cette configuration dangereuse est temporaire et ne servira qu’à l’installation initiale du lab.
+Une fois terminé, le contrôle d’accès empêchera les serveurs de communiquer directement avec Internet pour plus de sécurité.</p>
+
+<p>Nous nous rendons depuis le poste Windows 10 en zone d’administration sur l’interface web de PFSense.</p>
+
+<p>On clique sur <strong>Firewall</strong>, puis <strong>SRV</strong></p>
+
+<p><img src="http://localhost:4000/assets/lab-entreprise-active-directory/regle-pfsense.png" alt="regle-pfsense" style="border: 1px solid #1756a9;" /></p>
+
+<p>On peut maintenant ajouter la règle suivante:</p>
+
+<p><img src="http://localhost:4000/assets/lab-entreprise-active-directory/autoriser-net-srv.png" alt="autoriser-net-srv" style="border: 1px solid #1756a9;" /></p>
+
+<p>Il ne reste plus qu’à tester que le flux est ouvert côté serveur:</p>
+
+<p><img src="http://localhost:4000/assets/lab-entreprise-active-directory/ping-srv.png" alt="ping-srv" style="border: 1px solid #1756a9;" /></p>
+
+<h3 id="installation-du-rôle-ad-ds">Installation du rôle AD DS</h3>
+
+<blockquote>
+  <p>Todo…</p>
+</blockquote>
+
   </div><a class="u-url" href="/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html" hidden></a>
 </article>
 

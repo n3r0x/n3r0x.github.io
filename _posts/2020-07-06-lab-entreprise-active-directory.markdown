@@ -55,3 +55,60 @@ Pour éviter le problème au démarrage sur EFI, il faut aller dans **Options VM
 ![creer-dc5]({{ site.url }}/assets/lab-entreprise-active-directory/creer-dc-5.png){:style="border: 1px solid #1756a9;"}
 
 On peut maintenant installer Windows Server 2019 de façon classique.
+
+## Configuration de Windows Server 2019
+
+### Nom de la machine
+
+Pour commencer, nous allons changer le nom du serveur, puis lui configurer une adresse IP fixe:
+
+Ouvrez **Paramètres Windows**, puis **Système**, **Informations système**:
+
+![creer-dc-rename]({{ site.url }}/assets/lab-entreprise-active-directory/conf-dc-rename.png){:style="border: 1px solid #1756a9;"}
+
+Cliquez sur **Renommer ce PC** et entrez **DC01**:
+
+![creer-dc-rename2]({{ site.url }}/assets/lab-entreprise-active-directory/conf-dc-rename2.png){:style="border: 1px solid #1756a9;"}
+
+Cliquez sur **Suivant**, puis **Redémarrer plus tard**.
+
+Nous allons maintenant configurer une IP fixe pour le contrôleur de domaine. 
+
+### Configuration réseau
+
+On se rend sur **Paramètres Ethernet** afin de configurer notre interface:
+
+![conf-ip1]({{ site.url }}/assets/lab-entreprise-active-directory/conf-ip1.png){:style="border: 1px solid #1756a9;"}
+
+Notre contrôleur de domaine possedera l'IP **10.0.2.2**. Sa **gateway** et son **dns** seront tous les deux **10.0.2.1**:
+
+![conf-ip2]({{ site.url }}/assets/lab-entreprise-active-directory/conf-ip2.png){:style="border: 1px solid #1756a9;"}
+
+On redémarre pour prendre en compte le changement de nom de machine.
+
+Inutile d'essayer de ping le contrôleur de domaine depuis le poste Windows 10. Le firewall du serveur bloque l'ICMP. Vous pouvez désactiver le firewall sur la zone **privée** pour avoir une réponse. Ca peut-être utile pour du debug.
+
+### Configuration PFSense
+
+Nous allons devoir configurer le firewall de PFSense afin qu'il laisse passer le trafic venant de l'interface **SRV**.
+Cette configuration dangereuse est temporaire et ne servira qu'à l'installation initiale du lab.
+Une fois terminé, le contrôle d'accès empêchera les serveurs de communiquer directement avec Internet pour plus de sécurité.
+
+Nous nous rendons depuis le poste Windows 10 en zone d'administration sur l'interface web de PFSense.
+
+On clique sur **Firewall**, puis **SRV**
+
+![regle-pfsense]({{ site.url }}/assets/lab-entreprise-active-directory/regle-pfsense.png){:style="border: 1px solid #1756a9;"}
+
+On peut maintenant ajouter la règle suivante:
+
+![autoriser-net-srv]({{ site.url }}/assets/lab-entreprise-active-directory/autoriser-net-srv.png){:style="border: 1px solid #1756a9;"}
+
+Il ne reste plus qu'à tester que le flux est ouvert côté serveur:
+
+![ping-srv]({{ site.url }}/assets/lab-entreprise-active-directory/ping-srv.png){:style="border: 1px solid #1756a9;"}
+
+
+### Installation du rôle AD DS
+
+> Todo...

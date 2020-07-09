@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-09T01:55:10+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">n3r0x’s blog</title><subtitle>Yes we poutre des loutres</subtitle><entry><title type="html">Lab Active Directory - Part 6 - Active Directory</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 6 - Active Directory" /><published>2020-07-09T01:03:14+02:00</published><updated>2020-07-09T01:03:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.7">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-10T00:57:31+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">n3r0x’s blog</title><subtitle>Yes we poutre des loutres</subtitle><entry><title type="html">Lab Active Directory - Part 6 - Active Directory</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 6 - Active Directory" /><published>2020-07-09T01:03:14+02:00</published><updated>2020-07-09T01:03:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/09/lab-entreprise-active-directory.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
 
 &lt;ol&gt;
   &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
@@ -50,7 +50,65 @@
 
 &lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/creer-dc-5.png&quot; alt=&quot;creer-dc5&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;On peut maintenant installer Windows Server 2019 de façon classique.&lt;/p&gt;</content><author><name></name></author><summary type="html">Sommaire</summary></entry><entry><title type="html">Lab Active Directory - Part 5 - vSwitch ESXi (SW-SRV)</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 5 - vSwitch ESXi (SW-SRV)" /><published>2020-07-08T22:44:14+02:00</published><updated>2020-07-08T22:44:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
+&lt;p&gt;On peut maintenant installer Windows Server 2019 de façon classique.&lt;/p&gt;
+
+&lt;h2 id=&quot;configuration-de-windows-server-2019&quot;&gt;Configuration de Windows Server 2019&lt;/h2&gt;
+
+&lt;h3 id=&quot;nom-de-la-machine&quot;&gt;Nom de la machine&lt;/h3&gt;
+
+&lt;p&gt;Pour commencer, nous allons changer le nom du serveur, puis lui configurer une adresse IP fixe:&lt;/p&gt;
+
+&lt;p&gt;Ouvrez &lt;strong&gt;Paramètres Windows&lt;/strong&gt;, puis &lt;strong&gt;Système&lt;/strong&gt;, &lt;strong&gt;Informations système&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/conf-dc-rename.png&quot; alt=&quot;creer-dc-rename&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cliquez sur &lt;strong&gt;Renommer ce PC&lt;/strong&gt; et entrez &lt;strong&gt;DC01&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/conf-dc-rename2.png&quot; alt=&quot;creer-dc-rename2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Cliquez sur &lt;strong&gt;Suivant&lt;/strong&gt;, puis &lt;strong&gt;Redémarrer plus tard&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Nous allons maintenant configurer une IP fixe pour le contrôleur de domaine.&lt;/p&gt;
+
+&lt;h3 id=&quot;configuration-réseau&quot;&gt;Configuration réseau&lt;/h3&gt;
+
+&lt;p&gt;On se rend sur &lt;strong&gt;Paramètres Ethernet&lt;/strong&gt; afin de configurer notre interface:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/conf-ip1.png&quot; alt=&quot;conf-ip1&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Notre contrôleur de domaine possedera l’IP &lt;strong&gt;10.0.2.2&lt;/strong&gt;. Sa &lt;strong&gt;gateway&lt;/strong&gt; et son &lt;strong&gt;dns&lt;/strong&gt; seront tous les deux &lt;strong&gt;10.0.2.1&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/conf-ip2.png&quot; alt=&quot;conf-ip2&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On redémarre pour prendre en compte le changement de nom de machine.&lt;/p&gt;
+
+&lt;p&gt;Inutile d’essayer de ping le contrôleur de domaine depuis le poste Windows 10. Le firewall du serveur bloque l’ICMP. Vous pouvez désactiver le firewall sur la zone &lt;strong&gt;privée&lt;/strong&gt; pour avoir une réponse. Ca peut-être utile pour du debug.&lt;/p&gt;
+
+&lt;h3 id=&quot;configuration-pfsense&quot;&gt;Configuration PFSense&lt;/h3&gt;
+
+&lt;p&gt;Nous allons devoir configurer le firewall de PFSense afin qu’il laisse passer le trafic venant de l’interface &lt;strong&gt;SRV&lt;/strong&gt;.
+Cette configuration dangereuse est temporaire et ne servira qu’à l’installation initiale du lab.
+Une fois terminé, le contrôle d’accès empêchera les serveurs de communiquer directement avec Internet pour plus de sécurité.&lt;/p&gt;
+
+&lt;p&gt;Nous nous rendons depuis le poste Windows 10 en zone d’administration sur l’interface web de PFSense.&lt;/p&gt;
+
+&lt;p&gt;On clique sur &lt;strong&gt;Firewall&lt;/strong&gt;, puis &lt;strong&gt;SRV&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/regle-pfsense.png&quot; alt=&quot;regle-pfsense&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On peut maintenant ajouter la règle suivante:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/autoriser-net-srv.png&quot; alt=&quot;autoriser-net-srv&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Il ne reste plus qu’à tester que le flux est ouvert côté serveur:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://localhost:4000/assets/lab-entreprise-active-directory/ping-srv.png&quot; alt=&quot;ping-srv&quot; style=&quot;border: 1px solid #1756a9;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;installation-du-rôle-ad-ds&quot;&gt;Installation du rôle AD DS&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Todo…&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name></name></author><summary type="html">Sommaire</summary></entry><entry><title type="html">Lab Active Directory - Part 5 - vSwitch ESXi (SW-SRV)</title><link href="http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html" rel="alternate" type="text/html" title="Lab Active Directory - Part 5 - vSwitch ESXi (SW-SRV)" /><published>2020-07-08T22:44:14+02:00</published><updated>2020-07-08T22:44:14+02:00</updated><id>http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server</id><content type="html" xml:base="http://localhost:4000/microsoft/active/directory/2020/07/08/lab-entreprise-vswitch-server.html">&lt;h2 id=&quot;sommaire&quot;&gt;Sommaire&lt;/h2&gt;
 
 &lt;ol&gt;
   &lt;li&gt;&lt;a href=&quot;/microsoft/active/directory/2020/07/06/lab-entreprise-intoduction.html&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
